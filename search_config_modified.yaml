@@ -1,0 +1,92 @@
+intents:
+  - intent: "faculty_info"
+    description: "Retrieve faculty details by name or department."
+    keywords: 
+      - "who is"
+      - "tell me about"
+    entities:
+      - name: "faculty_name"
+        search_area: "faculty.name"
+      - name: "department"
+        search_area: "department"
+    mongodb_query:
+      - {"$match": {"department": {"$in": ["CSE"]}}}
+      - {"$unwind": {"path": "$faculty", "preserveNullAndEmptyArrays": True}}
+      - {"$match": {"faculty.name": {"$regex": "Dr. Veeraiah", "$options": "i"}}}
+      - {"$project": {
+          "faculty.name": 1,
+          "faculty.designation": 1,
+          "faculty.department": 1,
+          "faculty.experience": 1,
+          "faculty.email": 1,
+          "faculty.phone": 1,
+          "faculty.education": 1,
+          "faculty.teaching_subjects": 1,
+          "faculty.research_areas": 1,
+          "faculty.publications": 1,
+          "faculty.professional_memberships": 1,
+          "faculty.achievements_and_awards": 1,
+          "faculty.roles": 1,
+          "_id": 0
+        }}
+
+    response_type: "detailed"
+    response_template: |
+      "Faculty Name: {faculty.name}
+      Designation: {faculty.designation}
+      Department: {faculty.department}
+      Experience: {faculty.experience} years
+      Email: {faculty.email}
+      Phone: {faculty.phone}
+      Education: {faculty.education}
+      Teaching Subjects: {faculty.teaching_subjects}
+      Research Areas: {faculty.research_areas}
+      Publications: {faculty.publications}
+      Professional Memberships: {faculty.professional_memberships}
+      Achievements and Awards: {faculty.achievements_and_awards}
+      Roles: {faculty.roles}"
+    llm_prompt: |
+      "Generate a structured response for the faculty information:
+      {response_text}"
+
+  - intent: "admission_info"
+    description: "Provide admission-related information."
+    keywords:
+      - "admission process"
+      - "how to apply"
+      - "application process"
+      - "entrance details"
+      - "admission criteria"
+      - "eligibility for"
+      - "admissions"
+      - "admsn"
+      - "admn details"
+    entities:
+      - name: "department"
+        search_area: "admissions.department"
+      - name: "course_name"
+        search_area: "courses"
+        synonyms:
+          - "B.Tech"
+          - "M.Tech"
+          - "MBA"
+          - "BSc"
+    mongodb_query:
+      - stage: {"$match": {"department": {"$regex": "<department>", "$options": "i"}}}
+      - stage: {"$project": {
+          "admission_requirements": 1,
+          "application_deadline": 1,
+          "fee_structure": 1,
+          "contact_info": 1,
+          "_id": 0
+        }}
+    response_type: "brief"
+    response_template: |
+      "Department: {department}
+      Admission Requirements: {admission_requirements}
+      Application Deadline: {application_deadline}
+      Fee Structure: {fee_structure}
+      Contact Info: {contact_info}"
+    llm_prompt: |
+      "Provide a concise admission overview:
+      {response_text}"

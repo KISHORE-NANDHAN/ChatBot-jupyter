@@ -1,0 +1,59 @@
+- intent: "faculty_info"
+  description: "Retrieve details about faculty members based on name or department."
+  keywords: 
+    - "who is"
+    - "tell me about"
+    - "faculty details"
+    - "faculty information"
+    - "who's"
+    - "information about"
+    - "details of"
+    - "find faculty"
+    - "professor details"
+    - "lecturer info"
+  entities:
+    - name: "faculty_name"
+      search_area: "faculty.name"
+      description: "Name of the faculty member."
+      synonyms:
+        - "Dr."
+        - "Prof."
+        - "Professor"
+        - "Sr. Asst. Prof."
+    - name: "department"
+      search_area: "department"
+      description: "Department name for narrowing down search."
+      synonyms:
+        - "CSE"
+        - "Computer Science"
+        - "CS"
+        - "IT"
+        - "Information Technology"
+  collection: "departments"
+  fuzzy_threshold: 65
+  max_output_length: 300
+
+- intent: "admission_details"
+  description: "Provide information regarding admission procedures and requirements."
+  keywords: 
+    - "admission"
+    - "how to apply"
+    - "application process"
+    - "entrance details"
+    - "admission criteria"
+    - "eligibility for"
+    - "admisions"
+    - "admsn"
+    - "admn details"
+  entities:
+    - name: "course_name"
+      search_area: "courses"
+      description: "Name of the course for admission details."
+      synonyms:
+        - "B.Tech"
+        - "M.Tech"
+        - "MBA"
+        - "BSc"
+  collection: "admissions"
+  fuzzy_threshold: 65
+  max_output_length: 400
